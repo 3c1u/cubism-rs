@@ -134,9 +134,9 @@ impl Renderer {
         let opacity = model.drawable_opacities()[index];
         let dyn_flags = model.drawable_dynamic_flags()[index];
 
-        if draw_state.is_none() && opacity <= 0.0 {
-            return;
-        } else if draw_state.is_none() && !dyn_flags.intersects(DynamicFlags::IS_VISIBLE) {
+        if draw_state.is_none()
+            && (opacity <= 0.0 || !dyn_flags.intersects(DynamicFlags::IS_VISIBLE))
+        {
             return;
         }
 
