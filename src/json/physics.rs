@@ -127,7 +127,7 @@ impl Physics3 {
 impl FromStr for Physics3 {
     type Err = serde_json::Error;
 
-    /// Parses a Motion3 from a .physics3.json string.
+    /// Parses a Physics3 from a .physics3.json string.
     #[inline]
     fn from_str(s: &str) -> serde_json::Result<Self> {
         serde_json::from_str(s)

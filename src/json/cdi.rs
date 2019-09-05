@@ -41,7 +41,7 @@ pub struct Cdi3Part {
 }
 
 impl Cdi3 {
-    /// Parses a Expression3 from a .cdi3.json reader.
+    /// Parses a Cdi3 from a .cdi3.json reader.
     #[inline]
     pub fn from_reader<R: std::io::Read>(r: R) -> serde_json::Result<Self> {
         serde_json::from_reader(r)
