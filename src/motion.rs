@@ -9,7 +9,7 @@ use std::{
 use crate::{
     core::Model,
     error::CubismResult,
-    json::motion::{Motion3, Segment, SegmentPoint},
+    json::motion::{CurveTarget, Motion3, Segment, SegmentPoint},
 };
 
 fn lerp_points(p0: SegmentPoint, p1: SegmentPoint, t: f32) -> SegmentPoint {
@@ -155,11 +155,11 @@ impl Motion {
                 }
 
                 let id: &str = &curve.id;
-                let target: &str = &curve.target;
+                let target: CurveTarget = curve.target;
                 let value = segment_interpolate(seg, current);
 
                 match target {
-                    "Model" => {
+                    CurveTarget::Model => {
                         match id {
                             "EyeBlink" => {
                                 eye_blink = Some(value);
@@ -175,13 +175,13 @@ impl Motion {
                             },
                         }
                     },
-                    "PartOpacity" => {
+                    CurveTarget::PartOpacity => {
                         let param = model.part_mut(id);
                         if let Some(param) = param {
                             *param.opacity = value;
                         }
                     },
-                    "Parameter" => {
+                    CurveTarget::Parameter => {
                         let param = model.parameter_mut(id);
                         if let Some(param) = param {
                             // TODO: fade-in capability
@@ -199,9 +199,6 @@ impl Motion {
                                 // lip-sync
                             }
                         }
-                    },
-                    _ => {
-                        eprintln!("Unhandled target: {}", target);
                     },
                 }
 

@@ -31,7 +31,7 @@ pub struct PhysicsInput {
     source: PhysicsTarget,
     weight: f32,
     #[serde(rename = "Type")]
-    input_type: String,
+    input_type: PhysicsType,
     reflect: bool,
 }
 
@@ -43,8 +43,15 @@ pub struct PhysicsOutput {
     scale: f32,
     weight: f32,
     #[serde(rename = "Type")]
-    input_type: String,
+    output_type: PhysicsType,
     reflect: bool,
+}
+
+#[derive(Copy, Clone, Debug, Deserialize, Serialize)]
+pub enum PhysicsType {
+    X,
+    Y,
+    Angle,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
@@ -72,11 +79,21 @@ pub struct PhysicsNormalizationParameter {
     default: f32,
 }
 
+impl PhysicsNormalizationParameter {
+    pub fn normalize<F: Into<f32>>(&self, value: Option<F>) -> f32 {
+        if let Some(value) = value {
+            self.maximum.min(self.minimum.max(value.into()))
+        } else {
+            self.default
+        }
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct PhysicsTarget {
-    target: String,
-    id: String,
+#[serde(tag = "Target")]
+pub enum PhysicsTarget {
+    #[serde(rename_all = "PascalCase")]
+    Parameter { id: String },
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -112,6 +129,18 @@ pub struct EffectiveForces {
 pub struct Vec2D {
     x: f32,
     y: f32,
+}
+
+impl From<(f32, f32)> for Vec2D {
+    fn from((x, y): (f32, f32)) -> Vec2D {
+        Vec2D { x, y }
+    }
+}
+
+impl Into<(f32, f32)> for Vec2D {
+    fn into(self) -> (f32, f32) {
+        (self.x, self.y)
+    }
 }
 
 /*  */
