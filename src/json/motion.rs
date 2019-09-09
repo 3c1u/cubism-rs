@@ -184,7 +184,7 @@ mod segment_parser {
 #[serde(rename_all = "PascalCase")]
 pub struct Curve {
     /// Target.
-    pub target: String,
+    pub target: CurveTarget,
     /// Id.
     pub id: String,
     /// Segments.
@@ -196,6 +196,14 @@ pub struct Curve {
     /// Fade-out time. 1.0 [sec] as default.
     #[serde(default = "fade_time_default")]
     pub fade_out_time: f32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub enum CurveTarget {
+    Model,
+    PartOpacity,
+    Parameter,
 }
 
 fn fade_time_default() -> f32 {
